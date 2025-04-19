@@ -1,0 +1,24 @@
+from transformers import pipeline
+
+# Load emotion classification model
+emotion_classifier = pipeline("text-classification", 
+                              model="j-hartmann/emotion-english-distilroberta-base", 
+                              return_all_scores=True)
+
+while True:
+    # Take user input
+    user_input = input("Enter text (or type 'exit' to quit): ")
+
+    if user_input.lower() == 'exit':
+        break
+
+    # Run emotion classification
+    results = emotion_classifier(user_input)[0]  # Only one input
+
+    # Sort emotions by score
+    results = sorted(results, key=lambda x: x['score'], reverse=True)
+
+    print("\nEmotion Scores:")
+    for res in results:
+        print(f"{res['label']}: {res['score']:.4f}")
+    print()
